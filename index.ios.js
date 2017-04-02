@@ -5,60 +5,70 @@
  */
 
 import React, { Component } from 'react';
-import {MapView, Marker} from 'react-native';
 import {
   AppRegistry,
   StyleSheet,
   Text,
   View
 } from 'react-native';
+import MapView from 'react-native-maps';
+
 
 class Map_app2 extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			markers: []
-		}
-		this.handlePress = this.handlePress.bind(this);
-	}
-	handlePress(e) {
-		this.setState({
-			
-			markers: [...this.state.markers,
-			{
-				coordinate: e.nativeEvent.coordinate,
-				cost: `$${getRandomInt(50, 300)}`
-			}
-		]
-		})
-
-
-	}
+	
   render() {
     return (
-      <MapView
-      style= {styles.container}
-    initialRegion={{
-      latitude: 33.847666,
-      longitude: -84.3730527,
+
+  <View style={styles.container}>
+
+    <MapView
+      style={styles.map}
+     initialRegion={{
+      latitude: 33.749249,
+      longitude: -84.387314,
       latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      longitudeDelta: 0.0121,
     }}
-    onPress= {this.handlePress}
-    >
-    {this.state.markers.map((marker) => {
-    	return <Marker {...marker} />
-    })}
- </MapView>
+    />
+    </View>
+
+    // <MapView.Marker
+
+
+//     <MapView
+//   region={this.state.region}
+//   onRegionChange={this.onRegionChange}
+// >
+//   {this.state.markers.map(marker => (
+//     <MapView.Marker
+//       coordinate={{latitude: 39.749632,
+//       	longitude: -105.000363}}
+//       title={ "Hello"}
+//       description={"Ping"}
+//     />
+//   ))}
+// </MapView>
+
+  
+   
+
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1    // justifyContent: 'center',
-    // alignItems: 'center',
-    // backgroundColor: '#F5FCFF',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  map: {
+  	position: 'absolute',
+  	top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   welcome: {
     fontSize: 20,
