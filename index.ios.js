@@ -28,8 +28,16 @@ class Map_app2 extends Component {
       longitude: -84.387314,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0121,
-    }}
-    />
+    }}>
+
+    <MapView.Marker 
+       coordinate={{
+       	 latitude: 33.749249,
+         longitude: -84.387314,
+
+    }}/>
+
+    </MapView>
     </View>
 
     // <MapView.Marker
