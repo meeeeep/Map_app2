@@ -5,89 +5,108 @@
  */
 
 import React, { Component } from 'react';
+import * as firebase from 'firebase';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View, 
+  TextInput,
+  TouchableHighlight, 
+  AlertIOS
 } from 'react-native';
 import MapView from 'react-native-maps';
+import Geocoder from 'react-native-geocoder';
+const Search= require('./components/search.js');
+const styles= require('./components/styles.js');
+const ActionButton = require('./components/button.js');
+
+
+// Initialize Firebase: const is a read only reference to a value, which makes since here, because you don't want to override the value of firebase.
+const firebaseConfig = {
+    apiKey: "AIzaSyC-mxSz2gXmxpvaRJ-QFQ2HVpnBmXFd1Lc",
+    authDomain: "mapapp2-fe262.firebaseapp.com",
+    databaseURL: "https://mapapp2-fe262.firebaseio.com",
+    projectId: "mapapp2-fe262",
+    storageBucket: "mapapp2-fe262.appspot.com",
+    messagingSenderId: "8654993061"
+};
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 
 class Map_app2 extends Component {
+
+	constructor(props){
+		super(props);
+
+		this.state = {
+		region: {
+	  latitude: 33.749249,
+      longitude: -84.387314,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0121,
+			}
+		};
+		this.onRegionChange = this.onRegionChange.bind(this);
+	}
+	onRegionChange(region){
+		this.setState({region});
+	}
 	
   render() {
     return (
 
   <View style={styles.container}>
-
     <MapView
       style={styles.map}
-     initialRegion={{
-      latitude: 33.749249,
-      longitude: -84.387314,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0121,
-    }}>
-
+     region={this.state.region}
+     onRegionChange={this.onRegionChange}>
     <MapView.Marker 
-       coordinate={{
-       	 latitude: 33.749249,
-         longitude: -84.387314,
+       coordinate= {{
+       latitude: 33.749249,
+      longitude: -84.387314}}/>
 
-    }}/>
+
+        <ActionButton 
+        onPress={this._addItem.bind(this)} 
+        title="Search Address"/>
+
 
     </MapView>
+
+
     </View>
 
-    // <MapView.Marker
-
-
-//     <MapView
-//   region={this.state.region}
-//   onRegionChange={this.onRegionChange}
-// >
-//   {this.state.markers.map(marker => (
-//     <MapView.Marker
-//       coordinate={{latitude: 39.749632,
-//       	longitude: -105.000363}}
-//       title={ "Hello"}
-//       description={"Ping"}
-//     />
-//   ))}
-// </MapView>
-
-  
    
-
     );
   }
+
+
+_addItem() {
+
+    AlertIOS.prompt(
+      'Look up address',
+      null,
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {
+          text: 'Enter',
+          onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
+    // res is an Array of geocoding object (see below)
+                     console.log(res);
+                                })
+                   .catch(err => console.log(err)) 
+        }
+    
+      ],
+      'plain-text'
+    );
+      
+  }
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  map: {
-  	position: 'absolute',
-  	top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+
+
 
 AppRegistry.registerComponent('Map_app2', () => Map_app2);
