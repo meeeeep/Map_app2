@@ -45,13 +45,20 @@ class Map_app2 extends Component {
       longitude: -84.387314,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0121,
-			}
+			},
+			markers: [], 
+			showMarkers: false
+		
 		};
 		this.onRegionChange = this.onRegionChange.bind(this);
 	}
 	onRegionChange(region){
 		this.setState({region});
 	}
+   onMarkerChange(markers){
+   	this.setState({markers});
+   }
+   
 	
   render() {
     return (
@@ -59,18 +66,25 @@ class Map_app2 extends Component {
   <View style={styles.container}>
     <MapView
       style={styles.map}
-     region={this.state.region}
+     region={this.state.region} // defines the current location at Atlanta on the map
      onRegionChange={this.onRegionChange}>
-    <MapView.Marker 
-       coordinate= {{
-       latitude: 33.749249,
-      longitude: -84.387314}}/>
 
+    	// let marker = this.state.markers
+       
+       this.state.markers.map(marker => (
+return (
+         <MapView.Marker 
+         coordinate = {marker.latlng}
 
-        <ActionButton 
-        onPress={this._addItem.bind(this)} 
+         // <MapView.Callout
+         // onPress = {() => this._addItem()} />
+
+         />
+         ))}
+       )
+       <ActionButton 
+        onPress={this._addItem.bind(this,marker)} 
         title="Search Address"/>
-
 
     </MapView>
 
@@ -82,7 +96,8 @@ class Map_app2 extends Component {
   }
 
 
-_addItem() {
+
+_addItem(coordinate) {
 
     AlertIOS.prompt(
       'Look up address',
@@ -91,20 +106,25 @@ _addItem() {
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {
           text: 'Enter',
-          onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
-    // res is an Array of geocoding object (see below)
-                     console.log(res);
-                                })
-                   .catch(err => console.log(err)) 
-        }
-    
+          onPress: (marker) => console.log(marker)
+
+          // (coordinate) => ({latitude: this.state.region.latitude, 
+          //                             longitude: this.state.region.longitude})
+          
+
+
+
+
+                            } 
       ],
       'plain-text'
     );
-      
-  }
+                                      console.log(coordinate)
 
+  }
 }
+
+
 
 
 
