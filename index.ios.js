@@ -40,20 +40,21 @@ class Map_app2 extends Component {
 		super(props);
 
 		this.state = {
-		region: {
-	  latitude: 33.749249,
-      longitude: -84.387314,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0121
+			region: {
+		      latitude: 33.749249,
+		      longitude: -84.387314,
+		      latitudeDelta: 0.0922,
+		      longitudeDelta: 0.0121
 			},
-			coordinate: {latitude: 33.749249,
-			              longitude: -84.387314},
-			        
-			markers: []
+			coordinate: {
+				latitude: 33.749249,
+				longitude: -84.387314
+			},
 		};
-		this.onRegionChange = this.onRegionChange.bind(this);
+		
+	  this.onRegionChange = this.onRegionChange.bind(this);
 	}
-	onRegionChange(region){
+  onRegionChange(region){
 		this.setState({region});
 	}
 	
@@ -62,47 +63,35 @@ class Map_app2 extends Component {
 
     return (
 
-  <View style={styles.container}>
-    <MapView
-      style={styles.map}
-     region={
-     	this.state.region}
-     onRegionChange={this.onRegionChange}>
-     
-   
-    <MapView.Marker
+		<View style={styles.container}>
+		<MapView
+		  style={styles.map}
+		  region={this.state.region}
+		  onRegionChange={this.onRegionChange}
+		>
+		 
+		<MapView.Marker
+		  coordinate={{
+		  	latitude: this.state.coordinate.latitude,
+		    longitude: this.state.coordinate.longitude 
+		  }}
+		>
 
-      coordinate={{latitude: this.state.coordinate.latitude,
-                    longitude: this.state.coordinate.longitude}}>
-                   
-
-
-      </MapView.Marker>
-      
-      
-
-
-        <ActionButton 
-        onPress={this._addItem.bind(this)} 
-        title="Search Address"/>
+		</MapView.Marker>
+		    <ActionButton 
+		      onPress={this._addItem.bind(this)} 
+		      title="Search Address"/>
+		</MapView>
 
 
-    </MapView>
+		</View>
 
-
-    </View>
-
-   
     );
   }
 
 
-_addItem() {
+  _addItem() {
 	var coordinates = this.state.coordinate;
-	// var regionCoordinates = this.state.region;
-
-	// function mapping (){ this.state.coordinate = this.state.region}
-
     AlertIOS.prompt(
       'Look up address',
       null,
@@ -112,17 +101,16 @@ _addItem() {
           text: 'Enter',
           onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
     // res is an Array of geocoding object (see below)
-                      this.state.coordinate.latitude = res[0].position.lat 
-                      this.state.coordinate.longitude = res[0].position.lng
+                                this.state.coordinate.latitude = res[0].position.lat 
+                                this.state.coordinate.longitude = res[0].position.lng
 
-                      // console.log(this.state.coordinate.latitude)
-                                })
+                              })
+
                    .catch(err => console.log(err)) 
         }
-       
     
       ],
-      'plain-text'
+       'plain-text'
     );
       
   }
