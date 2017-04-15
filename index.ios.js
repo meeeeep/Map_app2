@@ -44,8 +44,12 @@ class Map_app2 extends Component {
 	  latitude: 33.749249,
       longitude: -84.387314,
       latitudeDelta: 0.0922,
-      longitudeDelta: 0.0121,
-			}
+      longitudeDelta: 0.0121
+			},
+			coordinate: {latitude: 33.749249,
+			              longitude: -84.387314},
+			        
+			markers: []
 		};
 		this.onRegionChange = this.onRegionChange.bind(this);
 	}
@@ -54,17 +58,28 @@ class Map_app2 extends Component {
 	}
 	
   render() {
+  	    	console.log(this.state.coordinate);
+
     return (
 
   <View style={styles.container}>
     <MapView
       style={styles.map}
-     region={this.state.region}
+     region={
+     	this.state.region}
      onRegionChange={this.onRegionChange}>
-    <MapView.Marker 
-       coordinate= {{
-       latitude: 33.749249,
-      longitude: -84.387314}}/>
+     
+   
+    <MapView.Marker
+
+      coordinate={{latitude: this.state.coordinate.latitude,
+                    longitude: this.state.coordinate.longitude}}>
+                   
+
+
+      </MapView.Marker>
+      
+      
 
 
         <ActionButton 
@@ -83,6 +98,10 @@ class Map_app2 extends Component {
 
 
 _addItem() {
+	var coordinates = this.state.coordinate;
+	// var regionCoordinates = this.state.region;
+
+	// function mapping (){ this.state.coordinate = this.state.region}
 
     AlertIOS.prompt(
       'Look up address',
@@ -93,10 +112,14 @@ _addItem() {
           text: 'Enter',
           onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
     // res is an Array of geocoding object (see below)
-                     console.log(res);
+                      this.state.coordinate.latitude = res[0].position.lat 
+                      this.state.coordinate.longitude = res[0].position.lng
+
+                      // console.log(this.state.coordinate.latitude)
                                 })
                    .catch(err => console.log(err)) 
         }
+       
     
       ],
       'plain-text'
@@ -105,6 +128,7 @@ _addItem() {
   }
 
 }
+
 
 
 
