@@ -103,6 +103,7 @@ class Map_app2 extends Component {
     // res is an Array of geocoding object (see below)
                                 this.state.coordinate.latitude = res[0].position.lat 
                                 this.state.coordinate.longitude = res[0].position.lng
+                                this.onRegionChange(this.state.coordinate)
 
                               })
 
