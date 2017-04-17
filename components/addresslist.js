@@ -1,6 +1,6 @@
-mport React, {Component} from 'react';
+import React, {Component} from 'react';
 import ReactNative from 'react-native';
-const styles = require('../styles.js')
+const styles = require('./styles.js')
 const { ScrollView, TouchableHighlight, Text } = ReactNative;
 
 var ListItem = React.createClass({
