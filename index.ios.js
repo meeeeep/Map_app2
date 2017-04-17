@@ -21,7 +21,7 @@ import Geocoder from 'react-native-geocoder';
 const Search= require('./components/search.js');
 const styles= require('./components/styles.js');
 const ActionButton = require('./components/button.js');
-const AddressList = require('./components/addresslist.js');
+const ListItem = require('./components/addresslist.js');
 
 
 // Initialize Firebase: const is a read only reference to a value, which makes since here, because you don't want to override the value of firebase.
@@ -67,15 +67,16 @@ class Map_app2 extends Component {
 listenForItems(itemsRef){
 	itemsRef.on('value', (snap) => {
 		var items = [];
-		snap.forEach((address) =>{
+		snap.forEach((child) =>{
            items.push({
-         	 region: address.val().address,
-         	 _key: address.key
+         	 address: child.val()._address,
+         	 _key: child.key
            });
+           console.log(items)
      	});
 	
      this.setState({
-     	datasource: this.state.datasource.cloneWithRows(items),
+     	dataSource: this.state.dataSource.cloneWithRows(items),
      	coordinate: this.state.coordinate
 
       });
@@ -89,7 +90,7 @@ listenForItems(itemsRef){
   }
 
   render() {
-  	    	console.log(this.state.coordinate);
+  	    	// console.log(this.state.coordinate);
 
     return (
 
@@ -140,7 +141,7 @@ listenForItems(itemsRef){
                                 this.state.coordinate.latitude = res[0].position.lat 
                                 this.state.coordinate.longitude = res[0].position.lng
                                 this.onRegionChange(this.state.coordinate)
-
+                                this.itemsRef.push({address: res[0].formattedAddress})
                               })
 
                    .catch(err => console.log(err)) 
@@ -149,7 +150,6 @@ listenForItems(itemsRef){
       ],
        'plain-text'
     );
-      
   }
 
   _renderItem(item) {
