@@ -42,12 +42,7 @@ class Map_app2 extends Component {
 		super(props);
 
 		this.state = {
-			region: {
-		      latitude: 33.749249,
-		      longitude: -84.387314,
-		      latitudeDelta: 0.0922,
-		      longitudeDelta: 0.0121
-			},
+			
 			coordinate: {
 				latitude: 33.749249,
 				longitude: -84.387314
@@ -57,14 +52,18 @@ class Map_app2 extends Component {
 		};
 		this.itemsRef = this.getRef().child('items');
 	  this.onRegionChange = this.onRegionChange.bind(this);
+	  this.onMarkerChange= this.onMarkerChange.bind(this);
 	}
     onRegionChange(region){
 		this.setState({region});
 	}
+	onMarkerChange(coordinate){
+		this.setState({coordinate});
+	}
 	getRef(){
 		return firebaseApp.database().ref();
 	}
-listenForItems(itemsRef){
+ listenForItems(itemsRef){
 	itemsRef.on('value', (snap) => {
 		var items = [];
 		snap.forEach((child) =>{
@@ -75,15 +74,15 @@ listenForItems(itemsRef){
            console.log(items)
      	});
 	
-     this.setState({
-     	dataSource: this.state.dataSource.cloneWithRows(items),
-     	coordinate: this.state.coordinate
+     // this.setState({
+     // 	dataSource: this.state.dataSource.cloneWithRows(items),
+     // 	coordinate: this.state.coordinate
 
-      });
+     //  });
 	
 	});
 
-}
+ }
 
   componentDidMount() {
     this.listenForItems(this.itemsRef);
@@ -97,12 +96,17 @@ listenForItems(itemsRef){
 		<View style={styles.container}>
 		<MapView
 		  style={styles.map}
-		  region={this.state.region}
+		  region={{
+		  	  latitude: 33.749249,
+		      longitude: -84.387314,
+		      latitudeDelta: 0.0922,
+		      longitudeDelta: 0.0121
+		  }}
 		  onRegionChange={this.onRegionChange}
 		>
 		 
 		<MapView.Marker
-		  coordinate={{
+		  coordinate={{ 
 		  	latitude: this.state.coordinate.latitude,
 		    longitude: this.state.coordinate.longitude 
 		  }}
@@ -112,14 +116,13 @@ listenForItems(itemsRef){
 		    <ActionButton 
 		      onPress={this._addItem.bind(this)} 
 		      title="Search Address"/>
-		</MapView>
-
-        <ListView 
+		      <ListView 
            dataSource= {this.state.dataSource} 
            renderRow= {this._renderItem.bind(this)}
            style= {styles.listview}
            enableEmptySections={true}>
            </ListView>
+		</MapView>
 
 		</View>
 
@@ -140,7 +143,8 @@ listenForItems(itemsRef){
     // res is an Array of geocoding object (see below)
                                 this.state.coordinate.latitude = res[0].position.lat 
                                 this.state.coordinate.longitude = res[0].position.lng
-                                this.onRegionChange(this.state.coordinate)
+                                this.onMarkerChange(this.state.coordinate)
+                                
                                 this.itemsRef.push({address: res[0].formattedAddress})
                               })
 
