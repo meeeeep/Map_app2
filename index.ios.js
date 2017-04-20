@@ -42,6 +42,11 @@ class Map_app2 extends Component {
 		super(props);
 
 		this.state = {
+			region: {latitude: 33.753746,
+		      longitude: -84.386330,
+		      latitudeDelta: 0.0922,
+		      longitudeDelta: 0.0121
+		  },
 			
 			coordinate: {
 				latitude: 33.749249,
@@ -52,13 +57,13 @@ class Map_app2 extends Component {
 		};
 		this.itemsRef = this.getRef().child('items');
 	  this.onRegionChange = this.onRegionChange.bind(this);
-	  this.onMarkerChange= this.onMarkerChange.bind(this);
+	  // this.onMarkerChange = this.onMarkerChange.bind(this);
 	}
     onRegionChange(region){
 		this.setState({region});
 	}
 	onMarkerChange(coordinate){
-		this.setState({coordinate});
+			this.setState({coordinate})
 	}
 	getRef(){
 		return firebaseApp.database().ref();
@@ -96,12 +101,7 @@ class Map_app2 extends Component {
 		<View style={styles.container}>
 		<MapView
 		  style={styles.map}
-		  region={{
-		  	  latitude: 33.749249,
-		      longitude: -84.387314,
-		      latitudeDelta: 0.0922,
-		      longitudeDelta: 0.0121
-		  }}
+		  region={this.state.region}
 		  onRegionChange={this.onRegionChange}
 		>
 		 
@@ -116,13 +116,15 @@ class Map_app2 extends Component {
 		    <ActionButton 
 		      onPress={this._addItem.bind(this)} 
 		      title="Search Address"/>
-		      <ListView 
+		     
+		</MapView>
+
+		 <ListView 
            dataSource= {this.state.dataSource} 
            renderRow= {this._renderItem.bind(this)}
            style= {styles.listview}
            enableEmptySections={true}>
            </ListView>
-		</MapView>
 
 		</View>
 
@@ -144,6 +146,8 @@ class Map_app2 extends Component {
                                 this.state.coordinate.latitude = res[0].position.lat 
                                 this.state.coordinate.longitude = res[0].position.lng
                                 this.onMarkerChange(this.state.coordinate)
+
+                                this.onRegionChange(this.state.coordinate)
                                 
                                 this.itemsRef.push({address: res[0].formattedAddress})
                               })
