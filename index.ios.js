@@ -57,7 +57,7 @@ class Map_app2 extends Component {
 		};
 		this.itemsRef = this.getRef().child('items');
 	  this.onRegionChange = this.onRegionChange.bind(this);
-	  // this.onMarkerChange = this.onMarkerChange.bind(this);
+	  this.onMarkerChange = this.onMarkerChange.bind(this);
 	}
     onRegionChange(region){
 		this.setState({region});
@@ -102,6 +102,7 @@ class Map_app2 extends Component {
 		<MapView
 		  style={styles.map}
 		  region={this.state.region}
+
 		  onRegionChange={this.onRegionChange}
 		>
 		 
@@ -110,6 +111,7 @@ class Map_app2 extends Component {
 		  	latitude: this.state.coordinate.latitude,
 		    longitude: this.state.coordinate.longitude 
 		  }}
+		  onPress= {() => console.log(this.state.coordinate)}
 		>
 
 		</MapView.Marker>
@@ -143,13 +145,14 @@ class Map_app2 extends Component {
           text: 'Enter',
           onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
     // res is an Array of geocoding object (see below)
+
                                 this.state.coordinate.latitude = res[0].position.lat 
                                 this.state.coordinate.longitude = res[0].position.lng
-                                this.onMarkerChange(this.state.coordinate)
-
-                                this.onRegionChange(this.state.coordinate)
-                                
+                                this.state.region = this.state.coordinate
+                                this.onRegionChange()
+                                console.log(this.state.region)
                                 this.itemsRef.push({address: res[0].formattedAddress})
+
                               })
 
                    .catch(err => console.log(err)) 
