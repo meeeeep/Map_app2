@@ -14,6 +14,7 @@ import {
   TextInput,
   TouchableHighlight, 
   ListView,
+  TabBarIOS,
   AlertIOS
 } from 'react-native';
 import MapView from 'react-native-maps';
@@ -22,6 +23,7 @@ const Search= require('./components/search.js');
 const styles= require('./components/styles.js');
 const ActionButton = require('./components/button.js');
 const ListItem = require('./components/addresslist.js');
+const TabBar = require('./components/tabBar.js');
 
 
 // Initialize Firebase: const is a read only reference to a value, which makes since here, because you don't want to override the value of firebase.
@@ -41,7 +43,7 @@ class Map_app2 extends Component {
 	constructor(props){
 		super(props);
 
-		this.state = {
+		this.state = { // setting the initial state of the map data to show atlanta region with marker along with listview data
 			region: {
 			  latitude: 33.753746,
 		      longitude: -84.386330,
@@ -56,27 +58,27 @@ class Map_app2 extends Component {
 				longitudeDelta: 0.0121
 			},
 
-      markers: [],
 
 			dataSource: new ListView.DataSource({
 				rowHasChanged: (row1, row2) => row1 !== row2})
 		};
 		this.itemsRef = this.getRef().child('items');
-	  this.onRegionChange = this.onRegionChange.bind(this);
+	   this.onRegionChange = this.onRegionChange.bind(this);
 	}
     onRegionChange(region){
 		this.setState({region});
 	}
 
-	getRef(){
+	getRef(){ // initializing firebase database
 		return firebaseApp.database().ref();
 	}
- listenForItems(itemsRef){
+
+ listenForItems(itemsRef){ // function that sets up list of items to be recorded in the database
 	itemsRef.on('value', (snap) => {
 		var items = [];
 		snap.forEach((child) =>{
            items.push({
-         	 address: child.val()._address,
+           address: child.val()._address,
            latCoordinates: child.val()._latCoordinates,
            lngCoordinates: child.val()._lngCoordinates,
          	 _key: child.key
@@ -101,45 +103,33 @@ class Map_app2 extends Component {
         //   console.log(this.state.coordinate)
 
     return (
-
-		<View style={styles.container}>
-		<MapView
+	  <View style={styles.container}>
+	
+	    <MapView
 		  style={styles.map}
 		  region={this.state.region}
-
-		  onRegionChange={this.onRegionChange}
-		>
+		  onRegionChange={this.onRegionChange}>
+			
 		 
-		<MapView.Marker
-		  coordinate={{ 
-		  	latitude: this.state.coordinate.latitude,
-		    longitude: this.state.coordinate.longitude 
-		  }}
-		  onPress= {() => console.log(this.state.coordinate)}
-		>
-
-		</MapView.Marker>
-		    <ActionButton 
-		      onPress={this._addItem.bind(this)} 
-		      title="Search Address"/>
-		     
-		</MapView>
-
-		 <ListView 
-           dataSource= {this.state.dataSource} 
-           renderRow= {this._renderItem.bind(this)}
-           style= {styles.listview}
-           enableEmptySections={true}>
-           </ListView>
-
-		</View>
+			<MapView.Marker
+			  coordinate={{ 
+			  	latitude: this.state.coordinate.latitude,
+			    longitude: this.state.coordinate.longitude 
+			  }}
+			  onPress= {() => console.log(this.state.coordinate)}
+			
+			/>
+	    </MapView>
+		
+		<TabBar/>
+		
+	  </View>	
 
     );
   }
 
 
-  _addItem() {
-	var coordinates = this.state.coordinate;
+  _addItem() { // adds users address to list and moves marker and mapview to that region
     AlertIOS.prompt(
       'Look up address',
       null,
@@ -148,7 +138,7 @@ class Map_app2 extends Component {
         {
           text: 'Enter',
           onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
-    // res is an Array of geocoding object (see below)
+    // res is an Array of the geocoding object returning the address the user inputs onpress of enter
 
                                 this.state.coordinate.latitude = res[0].position.lat 
                                 this.state.coordinate.longitude = res[0].position.lng
@@ -161,13 +151,14 @@ class Map_app2 extends Component {
                                 	address: res[0].formattedAddress, 
                                 	latCoordinates: res[0].position.lat, 
                                 	lngCoordinates: res[0].position.lng
-                                                     })
-                              })
+                                })
+                            })
 
                    .catch(err => console.log(err)) 
         }
     
       ],
+
        'plain-text'
     );
   }
