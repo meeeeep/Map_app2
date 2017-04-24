@@ -42,7 +42,8 @@ class Map_app2 extends Component {
 		super(props);
 
 		this.state = {
-			region: {latitude: 33.753746,
+			region: {
+			  latitude: 33.753746,
 		      longitude: -84.386330,
 		      latitudeDelta: 0.0922,
 		      longitudeDelta: 0.0121
@@ -50,21 +51,23 @@ class Map_app2 extends Component {
 			
 			coordinate: {
 				latitude: 33.749249,
-				longitude: -84.387314
+				longitude: -84.387314,
+				latitudeDelta: 0.0922,
+				longitudeDelta: 0.0121
 			},
+
+      markers: [],
+
 			dataSource: new ListView.DataSource({
 				rowHasChanged: (row1, row2) => row1 !== row2})
 		};
 		this.itemsRef = this.getRef().child('items');
 	  this.onRegionChange = this.onRegionChange.bind(this);
-	  this.onMarkerChange = this.onMarkerChange.bind(this);
 	}
     onRegionChange(region){
 		this.setState({region});
 	}
-	onMarkerChange(coordinate){
-			this.setState({coordinate})
-	}
+
 	getRef(){
 		return firebaseApp.database().ref();
 	}
@@ -74,16 +77,16 @@ class Map_app2 extends Component {
 		snap.forEach((child) =>{
            items.push({
          	 address: child.val()._address,
+           latCoordinates: child.val()._latCoordinates,
+           lngCoordinates: child.val()._lngCoordinates,
          	 _key: child.key
            });
            console.log(items)
      	});
 	
-     // this.setState({
-     // 	dataSource: this.state.dataSource.cloneWithRows(items),
-     // 	coordinate: this.state.coordinate
-
-     //  });
+     this.setState({
+     	dataSource: this.state.dataSource.cloneWithRows(items),
+      });
 	
 	});
 
@@ -94,7 +97,8 @@ class Map_app2 extends Component {
   }
 
   render() {
-  	    	// console.log(this.state.coordinate);
+  	    	// console.log(this.state.region);
+        //   console.log(this.state.coordinate)
 
     return (
 
@@ -148,11 +152,16 @@ class Map_app2 extends Component {
 
                                 this.state.coordinate.latitude = res[0].position.lat 
                                 this.state.coordinate.longitude = res[0].position.lng
-                                this.state.region = this.state.coordinate
-                                this.onRegionChange()
-                                console.log(this.state.region)
-                                this.itemsRef.push({address: res[0].formattedAddress})
+                                this.state.region = {latitude: res[0].position.lat,
+                                                     longitude: res[0].position.lng}
 
+                                this.onRegionChange(this.state.region)
+
+                                this.itemsRef.push({
+                                	address: res[0].formattedAddress, 
+                                	latCoordinates: res[0].position.lat, 
+                                	lngCoordinates: res[0].position.lng
+                                                     })
                               })
 
                    .catch(err => console.log(err)) 
