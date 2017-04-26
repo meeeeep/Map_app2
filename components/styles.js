@@ -5,11 +5,15 @@ const constants = {
 var {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+
+    backgroundColor: '#f2f2f2',
+    flex: 1
+    // flex: 1,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // backgroundColor: '#F5FCFF',
   },
   map: {
   width: width,
@@ -42,9 +46,6 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
 listview: {
-    paddingTop: 50,
-    paddingLeft: 30,
-    paddingRight: 30,
     flex: 1
   },
   li: {
@@ -60,12 +61,11 @@ listview: {
     flex: 2,
   },
   liText: {
-    color: '#333',
+    color: '#000000',
     fontSize: 16,
   },
 
   tabContent: {
-    flex: 1,
     alignItems: 'center',
     margin: 50
 

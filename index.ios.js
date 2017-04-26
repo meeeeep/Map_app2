@@ -84,9 +84,7 @@ class Map_app2 extends Component {
 		var items = [];
 		snap.forEach((child) =>{
            items.push({
-           address: child.val()._address,
-           latCoordinates: child.val()._latCoordinates,
-           lngCoordinates: child.val()._lngCoordinates,
+           address: child.val().address,
          	 _key: child.key
            });
            console.log(items)
@@ -134,13 +132,12 @@ class Map_app2 extends Component {
     </TabBarIOS.Item>  
 
     <TabBarIOS.Item
-            style={styles.tabContent}
 			systemIcon = "history"
 			selected= {this.state.selectedTab === 1}
 		    onPress=  {() => this.handleTabPress(1)}
 	>	
-            <View>
-			     <Text> Address History </Text> 
+            <View style= {styles.container}>
+			     <Text style={styles.tabContent}> Address History </Text> 
 			     <ListView 
                     dataSource= {this.state.dataSource} 
                     renderRow= {this._renderItem.bind(this)}
@@ -164,7 +161,7 @@ class Map_app2 extends Component {
         {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
         {
           text: 'Enter',
-          onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
+          onPress: (address) => Geocoder.geocodeAddress(address).then(res => {
     // res is an Array of the geocoding object returning the address the user inputs onpress of enter
 
                                 this.state.coordinate.latitude = res[0].position.lat 
@@ -174,11 +171,9 @@ class Map_app2 extends Component {
 
                                 this.onRegionChange(this.state.region)
 
-                                this.itemsRef.push({
-                                	address: res[0].formattedAddress, 
-                                	latCoordinates: res[0].position.lat, 
-                                	lngCoordinates: res[0].position.lng
-                                })
+                                this.itemsRef.push(
+                                  {address: res[0].formattedAddress}
+                                )
                             })
 
                    .catch(err => console.log(err)) 
