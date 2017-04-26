@@ -4,6 +4,9 @@ import MapView from 'react-native-maps';
 import Geocoder from 'react-native-geocoder';
 // import * as firebase from 'firebase';
 
+const ActionButton = require('../components/button.js');
+
+
 const styles = require('./styles.js')
 const { 
   AppRegistry,
@@ -114,6 +117,9 @@ class Map extends Component {
 			  onPress= {() => console.log(this.state.coordinate)}
 			
 			/>
+			<ActionButton 
+		      onPress={this._addItem.bind(this)} 
+		      title="Search Address"/>
 	    </MapView>
 				
 	  </View>	
@@ -141,11 +147,11 @@ class Map extends Component {
 
                                 this.onRegionChange(this.state.region)
 
-                                // this.itemsRef.push({
-                                // 	address: res[0].formattedAddress, 
-                                // 	latCoordinates: res[0].position.lat, 
-                                // 	lngCoordinates: res[0].position.lng
-                                // })
+                                this.itemsRef.push({
+                                	address: res[0].formattedAddress, 
+                                	latCoordinates: res[0].position.lat, 
+                                	lngCoordinates: res[0].position.lng
+                                })
                             })
 
                    .catch(err => console.log(err)) 
