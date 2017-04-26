@@ -67,8 +67,8 @@ listview: {
   tabContent: {
     flex: 1,
     alignItems: 'center',
-    margin: 50,
-    fontSize:45
+    margin: 50
+
   }
 
 });

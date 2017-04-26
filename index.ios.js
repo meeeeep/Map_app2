@@ -23,7 +23,7 @@ const Search= require('./components/search.js');
 const styles= require('./components/styles.js');
 const ActionButton = require('./components/button.js');
 const ListItem = require('./components/addresslist.js');
-const TabBar = require('./components/tabBar.js');
+const Map = require('./components/map.js');
 
 
 // Initialize Firebase: const is a read only reference to a value, which makes since here, because you don't want to override the value of firebase.
@@ -40,77 +40,88 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 class Map_app2 extends Component {
 
-	constructor(props){
-		super(props);
+	// constructor(props){
+	// 	super(props);
 
-		this.state = { // setting the initial state of the map data to show atlanta region with marker along with listview data
-			region: {
-			  latitude: 33.753746,
-		      longitude: -84.386330,
-		      latitudeDelta: 0.0922,
-		      longitudeDelta: 0.0121
-		  },
+	// 	this.state = { // setting the initial state of the map data to show atlanta region with marker along with listview data
+	// 		region: {
+	// 		  latitude: 33.753746,
+	// 	      longitude: -84.386330,
+	// 	      latitudeDelta: 0.0922,
+	// 	      longitudeDelta: 0.0121
+	// 	  },
 			
-			coordinate: {
-				latitude: 33.749249,
-				longitude: -84.387314,
-				latitudeDelta: 0.0922,
-				longitudeDelta: 0.0121
-			},
+	// 		coordinate: {
+	// 			latitude: 33.749249,
+	// 			longitude: -84.387314,
+	// 			latitudeDelta: 0.0922,
+	// 			longitudeDelta: 0.0121
+	// 		},
 
-		   selectedTab: 0,
+	// 	   selectedTab: 0,
 
 
-			dataSource: new ListView.DataSource({
-				rowHasChanged: (row1, row2) => row1 !== row2})
-		};
-		this.itemsRef = this.getRef().child('items');
-	   this.onRegionChange = this.onRegionChange.bind(this);
-	}
-    onRegionChange(region){
-		this.setState({region});
-	}
+	// 		dataSource: new ListView.DataSource({
+	// 			rowHasChanged: (row1, row2) => row1 !== row2})
+	// 	};
+	// 	this.itemsRef = this.getRef().child('items');
+	//    this.onRegionChange = this.onRegionChange.bind(this);
+	// }
+ //    onRegionChange(region){
+	// 	this.setState({region});
+	// }
 
-	getRef(){ // initializing firebase database
-		return firebaseApp.database().ref();
-	}
+	// getRef(){ // initializing firebase database
+	// 	return firebaseApp.database().ref();
+	// }
 
-	handleTabPress(tab){
-		this.setState({selectedTab: tab})
-	    }
+	// handleTabPress(tab){
+	// 	this.setState({selectedTab: tab})
+	//     }
 
- listenForItems(itemsRef){ // function that sets up list of items to be recorded in the database
-	itemsRef.on('value', (snap) => {
-		var items = [];
-		snap.forEach((child) =>{
-           items.push({
-           address: child.val()._address,
-           latCoordinates: child.val()._latCoordinates,
-           lngCoordinates: child.val()._lngCoordinates,
-         	 _key: child.key
-           });
-           console.log(items)
-     	});
+ // listenForItems(itemsRef){ // function that sets up list of items to be recorded in the database
+	// itemsRef.on('value', (snap) => {
+	// 	var items = [];
+	// 	snap.forEach((child) =>{
+ //           items.push({
+ //           address: child.val()._address,
+ //           latCoordinates: child.val()._latCoordinates,
+ //           lngCoordinates: child.val()._lngCoordinates,
+ //         	 _key: child.key
+ //           });
+ //           console.log(items)
+ //     	});
 	
-     this.setState({
-     	dataSource: this.state.dataSource.cloneWithRows(items),
-      });
+ //     this.setState({
+ //     	dataSource: this.state.dataSource.cloneWithRows(items),
+ //      });
 	
-	});
+	// });
 
- }
+ // }
 
-  componentDidMount() {
-    this.listenForItems(this.itemsRef);
-  }
+ //  componentDidMount() {
+ //    this.listenForItems(this.itemsRef);
+ //  }
 
   render() {
   	    	// console.log(this.state.region);
         //   console.log(this.state.coordinate)
 
     return (
-	 //  <View style={styles.container}>
-	
+
+
+	 // <View style={styles.container}>
+
+        <Map
+        />
+
+	 //   <TabBarIOS>
+	 //     <TabBarIOS.Item
+	 //        systemIcon='search'
+	 //        selected= {this.state.selectedTab === 1}
+		//     onPress=  {() => this.handleTabPress(1)} >
+
 	 //    <MapView
 		//   style={styles.map}
 		//   region={this.state.region}
@@ -126,84 +137,72 @@ class Map_app2 extends Component {
 			
 		// 	/>
 	 //    </MapView>
+
+	 //    </TabBarIOS.Item>
+
+	 //    </TabBarIOS>
 		
 		// <TabBar/>
 		
 	  // </View>	
-	  <TabBarIOS>
 
-
-		<TabBarIOS.Item 
-			systemIcon = "history"
-			style={styles.tabContent}
-			selected= {this.state.selectedTab === 0}
-		onPress=  {() => this.handleTabPress(0)}
-	>	
-            <View>
-			     <Text> Address History </Text> 
-			  </View>
-
-		</TabBarIOS.Item>
-
-
-		</TabBarIOS>
 
     );
   }
 
 
-  _addItem() { // adds users address to list and moves marker and mapview to that region
-    AlertIOS.prompt(
-      'Look up address',
-      null,
-      [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {
-          text: 'Enter',
-          onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
-    // res is an Array of the geocoding object returning the address the user inputs onpress of enter
+  // _addItem() { // adds users address to list and moves marker and mapview to that region
+  //   AlertIOS.prompt(
+  //     'Look up address',
+  //     null,
+  //     [
+  //       {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+  //       {
+  //         text: 'Enter',
+  //         onPress: (value) => Geocoder.geocodeAddress(value).then(res => {
+  //   // res is an Array of the geocoding object returning the address the user inputs onpress of enter
 
-                                this.state.coordinate.latitude = res[0].position.lat 
-                                this.state.coordinate.longitude = res[0].position.lng
-                                this.state.region = {latitude: res[0].position.lat,
-                                                     longitude: res[0].position.lng}
+  //                               this.state.coordinate.latitude = res[0].position.lat 
+  //                               this.state.coordinate.longitude = res[0].position.lng
+  //                               this.state.region = {latitude: res[0].position.lat,
+  //                                                    longitude: res[0].position.lng}
 
-                                this.onRegionChange(this.state.region)
+  //                               this.onRegionChange(this.state.region)
 
-                                this.itemsRef.push({
-                                	address: res[0].formattedAddress, 
-                                	latCoordinates: res[0].position.lat, 
-                                	lngCoordinates: res[0].position.lng
-                                })
-                            })
+  //                               this.itemsRef.push({
+  //                               	address: res[0].formattedAddress, 
+  //                               	latCoordinates: res[0].position.lat, 
+  //                               	lngCoordinates: res[0].position.lng
+  //                               })
+  //                           })
 
-                   .catch(err => console.log(err)) 
-        }
+  //                  .catch(err => console.log(err)) 
+  //       }
     
-      ],
+  //     ],
 
-       'plain-text'
-    );
-  }
+  //      'plain-text'
+  //   );
+  // }
 
-  _renderItem(item) {
+  // _renderItem(item) {
 
-    const onPress = () => {
-      AlertIOS.prompt(
-        'Edit or Delete Item',
-        null,
-        [
-          // {text: 'Edit', onPress: (text) => this.itemsRef.child(item._key).update({address: this.state.region})},
-          {text: 'Delete', onPress: (text) => this.itemsRef.child(item._key).remove()},
-          {text: 'Cancel', onPress: (text) => console.log('Cancelled')}
-        ]
-      );
-    };
+  //   const onPress = () => {
+  //     AlertIOS.prompt(
+  //       'Edit or Delete Item',
+  //       null,
+  //       [
+  //         // {text: 'Edit', onPress: (text) => this.itemsRef.child(item._key).update({address: this.state.region})},
+  //         {text: 'Delete', onPress: (text) => this.itemsRef.child(item._key).remove()},
+  //         {text: 'Cancel', onPress: (text) => console.log('Cancelled')}
+  //       ]
+  //     );
+  //   };
 
-    return (
-      <ListItem item={item} onPress={onPress} />
-    );
-  }
+  //   return (
+  //     <ListItem item={item} onPress={onPress} />
+  //   );
+  // }
 
 }
 

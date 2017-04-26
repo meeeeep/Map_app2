@@ -29,9 +29,11 @@ class TabBar extends Component {
 
 
 		<TabBarIOS.Item 
+
+		    style={styles.tabContent}
 			systemIcon = "history"
 			selected= {this.state.selectedTab === 0}
-		onPress=  {() => this.handleTabPress(0)}
+		    onPress=  {() => this.handleTabPress(0)}
 	>	
             <View>
 			     <Text> Address History </Text> 
