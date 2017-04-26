@@ -62,6 +62,13 @@ listview: {
   liText: {
     color: '#333',
     fontSize: 16,
+  },
+
+  tabContent: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 50,
+    fontSize:45
   }
 
 });

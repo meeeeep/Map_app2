@@ -8,26 +8,44 @@ const ListItem = ('./components/addresslist.js')
 const constants = styles.constants;
 const { StyleSheet, Text, View, TabBarIOS, ListView} = ReactNative;
 
+class TabBar extends Component {
 
-var TabBar = React.createClass({
-	render: function (){
+	constructor(props){
+		super(props);
+		this.state = {
+			selectedTab: 0
+		}
+	}
+
+		handleTabPress(tab){
+		this.setState({selectedTab: tab})
+	    }
+	
+			
+	render (){
 		return (
 
-<TabBarIOS>
+   <TabBarIOS>
+
+
 		<TabBarIOS.Item 
-			systemIcon = "history">	
-			
-              <View>
-			     <Text> Address History </Text>
-			     
+			systemIcon = "history"
+			selected= {this.state.selectedTab === 0}
+		onPress=  {() => this.handleTabPress(0)}
+	>	
+            <View>
+			     <Text> Address History </Text> 
 			  </View>
 
 		</TabBarIOS.Item>
+
+
 		</TabBarIOS>
             
 	    )
 	}
-})
+  
+}
 
 module.exports = TabBar;
 

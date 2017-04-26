@@ -58,6 +58,8 @@ class Map_app2 extends Component {
 				longitudeDelta: 0.0121
 			},
 
+		   selectedTab: 0,
+
 
 			dataSource: new ListView.DataSource({
 				rowHasChanged: (row1, row2) => row1 !== row2})
@@ -72,6 +74,10 @@ class Map_app2 extends Component {
 	getRef(){ // initializing firebase database
 		return firebaseApp.database().ref();
 	}
+
+	handleTabPress(tab){
+		this.setState({selectedTab: tab})
+	    }
 
  listenForItems(itemsRef){ // function that sets up list of items to be recorded in the database
 	itemsRef.on('value', (snap) => {
@@ -103,27 +109,44 @@ class Map_app2 extends Component {
         //   console.log(this.state.coordinate)
 
     return (
-	  <View style={styles.container}>
+	 //  <View style={styles.container}>
 	
-	    <MapView
-		  style={styles.map}
-		  region={this.state.region}
-		  onRegionChange={this.onRegionChange}>
+	 //    <MapView
+		//   style={styles.map}
+		//   region={this.state.region}
+		//   onRegionChange={this.onRegionChange}>
 			
 		 
-			<MapView.Marker
-			  coordinate={{ 
-			  	latitude: this.state.coordinate.latitude,
-			    longitude: this.state.coordinate.longitude 
-			  }}
-			  onPress= {() => console.log(this.state.coordinate)}
+		// 	<MapView.Marker
+		// 	  coordinate={{ 
+		// 	  	latitude: this.state.coordinate.latitude,
+		// 	    longitude: this.state.coordinate.longitude 
+		// 	  }}
+		// 	  onPress= {() => console.log(this.state.coordinate)}
 			
-			/>
-	    </MapView>
+		// 	/>
+	 //    </MapView>
 		
-		<TabBar/>
+		// <TabBar/>
 		
-	  </View>	
+	  // </View>	
+	  <TabBarIOS>
+
+
+		<TabBarIOS.Item 
+			systemIcon = "history"
+			style={styles.tabContent}
+			selected= {this.state.selectedTab === 0}
+		onPress=  {() => this.handleTabPress(0)}
+	>	
+            <View>
+			     <Text> Address History </Text> 
+			  </View>
+
+		</TabBarIOS.Item>
+
+
+		</TabBarIOS>
 
     );
   }
