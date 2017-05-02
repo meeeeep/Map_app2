@@ -60,6 +60,8 @@ class Map_app2 extends Component {
 
 		   selectedTab: 0,
 
+		   textInput: "",
+
 
 			dataSource: new ListView.DataSource({
 				rowHasChanged: (row1, row2) => row1 !== row2})
@@ -125,9 +127,22 @@ class Map_app2 extends Component {
 			  }}
 			  onPress= {() => console.log(this.state.coordinate)}
 			/>
-			<ActionButton 
+
+			<View>
+			<TextInput 
+			style={styles.input}
+			placeholder= 'Look up address'
+			returnKeyType= 'search'
+			keyboardType= 'numbers-and-punctuation'
+			value= {this.state.textInput}
+			onChangeText={(textInput) => this.setState({textInput})}
+		      />
+
+		      <ActionButton 
 		      onPress={this._addItem.bind(this)} 
 		      title="Search Address"/>
+			</View>
+		
 	    </MapView>
     </TabBarIOS.Item>  
 
@@ -151,39 +166,64 @@ class Map_app2 extends Component {
 	 	
     );
   }
+_addItem() { var value = this.state.textInput;
+	
+	// var value = this.state.textInput
+// adds users address to list and moves marker and mapview to that region
+     Geocoder.geocodeAddress(value).then(res => { console.log(value)
 
-
-  _addItem() { // adds users address to list and moves marker and mapview to that region
-    AlertIOS.prompt(
-      'Look up address',
-      null,
-      [
-        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-        {
-          text: 'Enter',
-          onPress: (address) => Geocoder.geocodeAddress(address).then(res => {
-    // res is an Array of the geocoding object returning the address the user inputs onpress of enter
-
+     // res is an Array of the geocoding object returning the address the user inputs onpress of enter
                                 this.state.coordinate.latitude = res[0].position.lat 
                                 this.state.coordinate.longitude = res[0].position.lng
                                 this.state.region = {latitude: res[0].position.lat,
                                                      longitude: res[0].position.lng}
+                                                     console.log(this)
+                                                     console.log(this.state.region)
+                                                     console.log(this.onRegionChange)
 
                                 this.onRegionChange(this.state.region)
 
-                                this.itemsRef.push(
-                                  {address: res[0].formattedAddress}
-                                )
+                                this.itemsRef.push({
+                                	address: res[0].formattedAddress, 
+                                	latCoordinates: res[0].position.lat, 
+                                	lngCoordinates: res[0].position.lng
+                                })
                             })
 
-                   .catch(err => console.log(err)) 
-        }
-    
-      ],
+           .catch(err => console.log(err)) 
 
-       'plain-text'
-    );
-  }
+    }
+  // _addItem() { // adds users address to list and moves marker and mapview to that region
+  //   AlertIOS.prompt(
+  //     'Look up address',
+  //     null,
+  //     [
+  //       {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+  //       {
+  //         text: 'Enter',
+  //         onPress: (address) => Geocoder.geocodeAddress(address).then(res => {
+  //   // res is an Array of the geocoding object returning the address the user inputs onpress of enter
+
+  //                               this.state.coordinate.latitude = res[0].position.lat 
+  //                               this.state.coordinate.longitude = res[0].position.lng
+  //                               this.state.region = {latitude: res[0].position.lat,
+  //                                                    longitude: res[0].position.lng}
+
+  //                               this.onRegionChange(this.state.region)
+
+  //                               this.itemsRef.push(
+  //                                 {address: res[0].formattedAddress}
+  //                               )
+  //                           })
+
+  //                  .catch(err => console.log(err)) 
+  //       }
+    
+  //     ],
+
+  //      'plain-text'
+  //   );
+  // }
 
   _renderItem(item) {
 

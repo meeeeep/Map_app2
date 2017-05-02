@@ -20,12 +20,13 @@ const styles = StyleSheet.create({
   height: height
 },
   input: {
-    height: 100,
-    paddingTop: 70,
+    height: 50,
+    paddingTop: 10,
     paddingHorizontal: 8,
     fontSize: 15,
     borderColor: 'black',
-    borderWidth: 3
+    borderWidth: 3,
+    backgroundColor: 'white'
   },
   instructions: {
     textAlign: 'center',

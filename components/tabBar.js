@@ -27,13 +27,22 @@ class TabBar extends Component {
 
    <TabBarIOS>
 
+        <TabBarIOS.Item
+            systemIcon = "bookmarks"
+			selected= {this.state.selectedTab === 0}
+		    onPress=  {() => this.handleTabPress(0)} >
+
+		    <MapView
+
+		    </TabBarIOS.Item>
+
 
 		<TabBarIOS.Item 
 
 		    style={styles.tabContent}
 			systemIcon = "history"
-			selected= {this.state.selectedTab === 0}
-		    onPress=  {() => this.handleTabPress(0)}
+			selected= {this.state.selectedTab === 1}
+		    onPress=  {() => this.handleTabPress(1)}
 	>	
             <View>
 			     <Text> Address History </Text> 
